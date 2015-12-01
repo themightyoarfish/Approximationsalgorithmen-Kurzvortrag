@@ -3,6 +3,17 @@
 \usepackage[ngerman]{babel} 
 \usepackage{amsmath} 
 \usepackage{caption} 
+\usepackage{xcolor} 
+\usepackage{listings} 
+\lstset{
+   basicstyle   = \footnotesize\ttfamily,
+   breaklines   = true,
+   commentstyle = \color{blue},
+   keywordstyle = \color{purple}\textbf,
+   numberstyle  = \tiny\color{gray},
+   numbers      = left,
+   stringstyle  = \color{olive},
+}
 
 \title{FPTAS für das \emph{Restricted Shortest Path}-Problem}
 \author{Rasmus Diederichsen \and Sebastian Höffner}
@@ -30,19 +41,23 @@ dessen Verzögerung $\le T$ ist.
 
 Durch dynamische Programmierung kann das Problem gelöst werden.
 Sei $g_j(c)$ die Gesamtverzögerund des schnellsten Pfades von $1$ zu $j$, der
-nicht länger als $c$ ist.
+nicht länger als $c$ ist. Eine vereinfachende Annahme ist, dass der Graph
+azyklisch ist, sodass $(i,j) \in E \Rightarrow i < j$. Angeblich kann man dies
+leicht auf zyklische Graphen erweitern (wie auch immer).
 
 \subsection{Algorithmus B}
 
-\begin{align*}
-   g_1(c) & =  0,                                                                                            & c = 0,\ldots,OPT, \\
-   g_j(0) & =  \infty,                                                                                       & j = 2,\ldots,n, \\
-   g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le
+\begin{center}
+   \begin{minipage}{\linewidth}
+      \begin{align*}
+         g_1(c) & =  0,                                                                                            & c = 0,\ldots,OPT, \\
+         g_j(0) & =  \infty,                                                                                       & j = 2,\ldots,n, \\
+         g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le
    c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\}, & j = 2,\ldots,n; ~ c= 1,\ldots,OPT
-\end{align*}
-\captionof{figure}{Algorithmus B}
-
-\vskip\baselineskip
+      \end{align*}
+      \captionof{figure}{Algorithmus B}
+   \end{minipage}
+\end{center}
 
 Die Laufzeit ist hier $\mathcal{O}(OPT\cdot n \cdot \text{Aufwand pro
 $(c,j)$})$. Für jedes $g_j(c)$ kann ein Aufwand von $\mathcal{O}(n)$ anfallen,
@@ -52,10 +67,88 @@ von $\mathcal{O}(n^2 OPT) = \mathcal{O}(|E| OPT)$.
 \subsection{Wann terminiert der Algorithmus?}
 
 Man kennt zwar $OPT$ nicht, aber man weiß, dass $OPT=\min\left\{c \mid g_n(c)
-\le T\right\}$, also setzt man $OPT$, soblad man das erste $c$ gefunden hat mit
+\le T\right\}$, also setzt man $OPT$, sobald man das erste $c$ gefunden hat mit 
 $g_n(c)\le T$, denn schneller kann es per Definition von $g$ nicht werden.
 
 Das Problem ist, dass der Algorithmus nur pseudopolynomiell ist (vgl. Rucksack).
 die Kantengewichte und damit $OPT$ können aber exponentiell in der Eingabe(bit)länge sein.
 
+Gemäß (Lorenz et al., 1999) gilt die Komplexität nur für azyklische Graphen. Für
+beliebige, auch mit (Kantengewichten $0$), sei die Laufzeit
+$\mathcal{O}(|E||V|OPT)$.
+
+\section{Die Test-Prozedur}
+
+Um ein FPTAS für das Problem zu konstruieren, wird zunächst ein Verafahren
+gesucht, das untere und obere Schranken für $OPT$ berechnet. Hassin bemerkt,
+dass ein wesentliches Problem bei der Entwicklung von FPTAS war, dass man keine
+guten Grenzen kannte, deren Quotient polynomiell in der Eingabegröße ist.
+\textcolor{red}{Wir haben allerdings keine Ahnung, warum so etwas hilfreich wäre}.
+
+Man wünscht sich einen polynomiellen $TEST(k)$, sodass 
+\begin{align*}
+   TEST(k) = 
+   \begin{cases}
+      1 & \text{falls } OPT \ge k \\
+      0 & \text{falls } OPT < k \\
+   \end{cases} 
+\end{align*}
+denn mit diesem könnte man durch binäre Suche auf $\left\{0,\ldots,UB\right\}$ das
+Problem exakt lösen. Es ist aber $NP$-schwer, daher wird ein Test gesucht,
+sodass
+\begin{align*}
+   TEST(k) = 
+   \begin{cases}
+      1 & \text{falls } OPT \ge k \\
+      0 & \text{falls } OPT < k(1 + \epsilon) \\
+   \end{cases} 
+\end{align*}
+
+Der Test skaliert und rundet alle Kantengewichte als $\hat{c}_{ij} =
+\lfloor\frac{c_{ij} (n-1)}{k\epsilon}\rfloor$ und wendet dann Algorithmus B an,
+bis $g_n(c) \le T$ gefunden ist für $c < \frac{n-1}{\epsilon}$ oder $c \ge
+\frac{n-1}{\epsilon}$.
+
+Falls $c < \frac{n-1}{\epsilon}$, dann gilt für den gefundenen Pfad im
+Originalgraphen
+\begin{align*}
+   k & \le k \\
+   \frac{k\epsilon}{n-1} \frac{n-1}{\epsilon} & \le k \\
+   \intertext{Es folgt}
+   \frac{k\epsilon}{n-1} c & < k \\
+   \frac{k\epsilon}{n-1} c + k\epsilon& < k + k\epsilon\\
+   \frac{k\epsilon}{n-1} c + k\epsilon& < k(1+\epsilon)\\
+\end{align*}
+
+Falls stattdessen $c \ge \frac{n-1}{\epsilon}$, so sind die Kosten im
+Originalgraphen größer gleich
+\begin{align*}
+   c & \ge \frac{n-1}{\epsilon} \\
+   c \frac{k\epsilon}{n-1} & \ge \frac{k\epsilon}{n-1}\frac{n-1}{\epsilon} \\
+   c \frac{k\epsilon}{n-1} & \ge k \\
+\end{align*}
+
+Somit leistet der Test das geforderte.
+\begin{lstlisting}[escapeinside={*}{*}]
+Setze *$c \leftarrow 0$*
+F*ü*r alle *$(i,j)\in E$*:
+   Falls *$c_{ij}$ > k*, entferne *$(i,j)$*
+   Sonst *$c_{ij} \leftarrow \lfloor c_{ij}(n-1) / k\epsilon\rfloor$*
+
+Falls *$c \ge (n-1) / \epsilon$*, return true
+Sonst: 
+   Wende Algorithmus B an und berechne *$g_j(c)$* f*ü*r *$j=2,\ldots,n$*
+   Falls *$g_n(c) \le T$*, return false
+   Sonst:
+      Setze *$c \leftarrow c + 1$*
+      Goto Zeile 6
+\end{lstlisting}
+ Durch binäre Suche kann man nach oben beschränkte Zahlen runden, und alle
+ größer als $k$ werden hier rausgeworfen. Dafür fällt Lauftzeit
+ $\mathcal{O}(|E|\log{\frac{n-1}{\epsilon}})$ an. Algorithmus B führt insgesamt
+ weniger als $\frac{n-1}{\epsilon}$ Iterationen durch, für die je
+ schlimmstenfalls $\mathcal{O}(|E|)$ Zeit anfällt. Die Gesamtlaufzeit des Tests
+ ist daher $\mathcal{O}(|E|\log{\frac{n-1}{\epsilon}} + |E|\frac{n-1}{\epsilon})
+ = \mathcal{O}(|E|\frac{n-1}{\epsilon})
+$
 \end{document}
