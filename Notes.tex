@@ -32,6 +32,7 @@ Durch dynamische Programmierung kann das Problem gelöst werden.
 Sei $g_j(c)$ die Gesamtverzögerund des schnellsten Pfades von $1$ zu $j$, der
 nicht länger als $c$ ist.
 
+\subsection{Algorithmus B}
 
 \begin{align*}
    g_1(c) & =  0,                                                                                            & c = 0,\ldots,OPT, \\
@@ -46,6 +47,15 @@ nicht länger als $c$ ist.
 Die Laufzeit ist hier $\mathcal{O}(OPT\cdot n \cdot \text{Aufwand pro
 $(c,j)$})$. Für jedes $g_j(c)$ kann ein Aufwand von $\mathcal{O}(n)$ anfallen,
 da alle Vorgängerknoten durchsucht werden müssen. Es ergibt sich eine Laufzeit
-von $\mathcal{O}(n^2 OPT) = \mathcal{O}(|E| OPT)$
+von $\mathcal{O}(n^2 OPT) = \mathcal{O}(|E| OPT)$.
+
+\subsection{Wann terminiert der Algorithmus?}
+
+Man kennt zwar $OPT$ nicht, aber man weiß, dass $OPT=\min\left\{c \mid g_n(c)
+\le T\right\}$, also setzt man $OPT$, soblad man das erste $c$ gefunden hat mit
+$g_n(c)\le T$, denn schneller kann es per Definition von $g$ nicht werden.
+
+Das Problem ist, dass der Algorithmus nur pseudopolynomiell ist (vgl. Rucksack).
+die Kantengewichte und damit $OPT$ können aber exponentiell in der Eingabe(bit)länge sein.
 
 \end{document}
