@@ -60,9 +60,9 @@ leicht auf zyklische Graphen erweitern (wie auch immer).
 \end{center}
 
 Die Laufzeit ist hier $\mathcal{O}(OPT\cdot n \cdot \text{Aufwand pro
-$(c,j)$})$. Für jedes $g_j(c)$ kann ein Aufwand von $\mathcal{O}(n)$ anfallen,
+$(c,j)$})$. Für jedes $g_j(c)$ kann ein Aufwand von $\mathcal{O}\left(n\right)$ anfallen,
 da alle Vorgängerknoten durchsucht werden müssen. Es ergibt sich eine Laufzeit
-von $\mathcal{O}(n^2 OPT) = \mathcal{O}(|E| OPT)$.
+von $\mathcal{O}\left(n^2 OPT\right) = \mathcal{O}\left(|E| OPT\right)$.
 
 \subsection{Wann terminiert der Algorithmus?}
 
@@ -75,7 +75,7 @@ die Kantengewichte und damit $OPT$ können aber exponentiell in der Eingabe(bit)
 
 Gemäß (Lorenz et al., 1999) gilt die Komplexität nur für azyklische Graphen. Für
 beliebige, auch mit (Kantengewichten $0$), sei die Laufzeit
-$\mathcal{O}(|E||V|OPT)$.
+$\mathcal{O}\left(|E||V|OPT\right)$.
 
 \section{Die Test-Prozedur}
 
@@ -145,10 +145,66 @@ Sonst:
 \end{lstlisting}
  Durch binäre Suche kann man nach oben beschränkte Zahlen runden, und alle
  größer als $k$ werden hier rausgeworfen. Dafür fällt Lauftzeit
- $\mathcal{O}(|E|\log{\frac{n-1}{\epsilon}})$ an. Algorithmus B führt insgesamt
+ $\mathcal{O}\left(|E|\log{\frac{n-1}{\epsilon}}\right)$ an. Algorithmus B führt insgesamt
  weniger als $\frac{n-1}{\epsilon}$ Iterationen durch, für die je
- schlimmstenfalls $\mathcal{O}(|E|)$ Zeit anfällt. Die Gesamtlaufzeit des Tests
- ist daher $\mathcal{O}(|E|\log{\frac{n-1}{\epsilon}} + |E|\frac{n-1}{\epsilon})
- = \mathcal{O}(|E|\frac{n-1}{\epsilon})
+ schlimmstenfalls $\mathcal{O}\left(|E|\right)$ Zeit anfällt. Die Gesamtlaufzeit des Tests
+ ist daher $\mathcal{O}\left(|E|\log{\frac{n-1}{\epsilon}} + |E|\frac{n-1}{\epsilon}\right)
+ = \mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)
 $
+\section{Das FPTAS}
+
+Das Schema setzt obere und untere Schranken $LB \le OPT \le UB$ voraus. Initiale
+Werte können z.B. $LB=1$ oder $LB=\text{kürzester Pfad nach Kosten}$ und
+$UB=\sum n-1 \text{ längste Kanten}$ oder $UB=\text{Kosten des schnellsten
+Pfades von $1$ nach $n$}$.
+
+\begin{lstlisting}[escapeinside={*}{*}]
+*$UB := \sum (n-1) \text{ größte Kosten}$*
+*$LB := 1$*
+
+Falls *$UB \le 2LB$*, Goto Zeile 11
+Sonst:
+   *$k := \sqrt{UB \cdot LB}$*
+   Falls *$TEST(k)$* == true, *$LB := k$*
+   Sonst *$UB := k(1 + \epsilon)$*
+   Goto Zeile 4
+
+   Setze *$c_{ij} \leftarrow c_{ij} (n-1)/LB\epsilon$*
+   Berechne mit Algorithmus B die optimale L*ö*sung
+\end{lstlisting}
+
+Falls $UB \le (1+\epsilon)LB$, so hat man mit $UB$ schon eine
+$\epsilon$-Approximation für $OPT$. Also sei $UB > (1+\epsilon)$. Man testet nun
+mittels $TEST(k)$ für Werte $LB < k < UB(1+\epsilon)$, um die Schranken zu
+verengen, da man entweder $UB=k(1+\epsilon)$ oder $LB = k$ setzen kann. Durch
+eine Art binäre Suche lassen sich die Grenzen schnell einengen. Man tut dies, bis
+$\frac{UB}{LB} \le 2$ oder eine andere Konstante. Die Werte für $k$ werden als
+$\sqrt{UB \cdot LB}$ berechnet (\textcolor{red}{warum?}).
+
+Um das Problem approximativ zu lösen, wendet man nun Algorithmus B auf skalierte
+und gerundete Instanz mit Gewichten $c_{ij}(n-1)/LB\epsilon$ an. Die Abweichung
+vom optimalen Pfad kann (wie für $TEST$ gezeigt) nicht größer als $k\epsilon$,
+hier also $LB\epsilon < OPT\epsilon$ sein.
+
+Durch Rundung der Kantenkosten reduziert sich die Laufzeit der letzten Anwendung
+von Algorithmus B auf $\mathcal{O}\left(|E| OPT\frac{(n-1)}{LB\epsilon}\right)$. Da $OPT
+\le 2LB$, ist dies eine Teilmenge von $\mathcal{O}(|E|
+2LB\frac{(n-1)}{LB\epsilon})=\mathcal{O}(|E|
+2\frac{(n-1)}{\epsilon})=\mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)$. Laut Hassin muss
+man $\log{\log{\frac{UB}{LB}}}$ Tests durchführen, bis der Quotient auf $2$
+sinkt.
+
+Die Wurzelbestimmung kann teuer sein, aber es genügt, ein $k$ zu finden, sodass
+$\sqrt[2]{\frac{UB}{LB}} < k < \sqrt{\frac{UB}{LB}}$. Dies geht offenbar in
+$\log{\log{\frac{UB}{LB}}}$ (Tippfehler im Paper?). Die einzelnen Aufrufe von
+$TEST$ benötigen wie oben $\mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)$. Insgesamt
+ergibt sich eine Laufzeit von
+$\mathcal{O}(\log\log{\frac{UB}{LB}\cdot(|E|\frac{n-1}{\epsilon} +
+\log\log{\frac{UB}{LB}})})$, was polynomiell in $n$ und $\epsilon$.
+
+% Die Wurzel exakt zu bestimmen kann teuer sein, aber man kann ein
+% $k^\prime$ finden, dass größer als diw Wurzel der Wurzel, aber kleiner gleich
+% die Wurzel ist in $\log{\log{\frac{UB}{LB}}}$ (Tippfehler? Paper sagt $LB/UB$
+% hier). Diese Wahl von $k$ ist gut weil?
+
 \end{document}
