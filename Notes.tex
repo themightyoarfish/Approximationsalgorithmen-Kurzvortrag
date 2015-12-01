@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage[utf8x]{inputenc} 
+\usepackage[ngerman]{babel} 
+\usepackage{amsmath} 
+\usepackage{caption} 
+
+\title{FPTAS für das \emph{Restricted Shortest Path}-Problem}
+\author{Rasmus Diederichsen \and Sebastian Höffner}
+
+\begin{document}
+\maketitle
+\section{Problemstellung}
+
+Das \emph{Shortest Path}-Problem besteht darin, in einem gewichteten Graphen den
+kürzesten Weg von einem Start- zum Zielknoten auszurechnen. Wir kennen schon das
+\emph{Single Source Shortest Path}-Problem, das darin besteht vom Startknoten
+die kürzesten Wege zu allen anderen Knoten auszurechnen. Das Problem lässt sich
+mit Dijkstras Algorithmus lösen. Weiterhin gibt es das \emph{All Pairs Shortest
+Path}-Problem, für das wir Floyds Algorithmus kennengelernt haben. Hierbei
+werden alle kürzesten Wege zwischen je zwei Knoten berechnet.
+
+Unser Problem wandelt die obigen insofern ab, als Kanten nicht mehr nur Gewicht
+$c_{ij}$ haben, sonden nun noch eine Verzögerung (\emph{delay} oder
+\emph{transit time}) $t_{ij}$ zusätzlich haben.
+
+Wir möchten den nach Gewichten kürzesten Pfad von Knoten $1$ nach $n$ berechnen,
+dessen Verzögerung $\le T$ ist.
+
+\section{Exakte Lösung}
+
+Durch dynamische Programmierung kann das Problem gelöst werden.
+Sei $g_j(c)$ die Gesamtverzögerund des schnellsten Pfades von $1$ zu $j$, der
+nicht länger als $c$ ist.
+
+
+\begin{align*}
+   g_1(c) & =  0,                                                                                            & c = 0,\ldots,OPT, \\
+   g_j(0) & =  \infty,                                                                                       & j = 2,\ldots,n, \\
+   g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le
+   c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\}, & j = 2,\ldots,n; ~ c= 1,\ldots,OPT
+\end{align*}
+\captionof{figure}{Algorithmus B}
+
+\vskip\baselineskip
+
+Die Laufzeit ist hier $\mathcal{O}(OPT\cdot n \cdot \text{Aufwand pro
+$(c,j)$})$. Für jedes $g_j(c)$ kann ein Aufwand von $\mathcal{O}(n)$ anfallen,
+da alle Vorgängerknoten durchsucht werden müssen. Es ergibt sich eine Laufzeit
+von $\mathcal{O}(n^2 OPT) = \mathcal{O}(|E| OPT)$
+
+\end{document}
