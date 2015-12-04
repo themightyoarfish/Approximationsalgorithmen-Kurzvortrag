@@ -19,6 +19,8 @@
 \usecolortheme{seagull}
 \useinnertheme{circles}
 \useoutertheme{split}
+\setbeamertemplate{itemize subitem}{{\tiny\trianglearrow}}
+
 \title{FPTAS für das Restricted Shortest Path-Problem}
 \author{Rasmus Diederichsen \and Sebastian Höffner}
 \institute{Universität Osnabrück}
@@ -53,10 +55,13 @@
 \end{frame}
 
 \section{Exakte Lösung}
+\subsection{Algorithmus}
 \begin{frame}
    \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
 
-   Dynamische Programmierung (ähnlich wie Knapsack)
+   Dynamische Programmierung (ähnlich wie Knapsack). Kanten $(i,j)$ mit $i < j$,
+   da azyklisch.
    \begin{block}{Algorithmus}
       \begin{align*}
          g_1(c) & =  0, ~ \text{Für} ~ c = 0,\ldots,OPT, \\
@@ -64,7 +69,46 @@
          g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le
    c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
    & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
-      \end{align*}
+\end{align*}
    \end{block}
+\end{frame}
+
+\subsection{Laufzeit}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+   \setbeamercolor{bgcolor}{fg=black,bg=lightgray!50!white} % TODO: Use right color
+   \begin{beamercolorbox}[center,wd=\paperwidth]{bgcolor}
+      \begin{align*}
+         g_1(c) & =  0, ~ \text{Für} ~ c = 0,\ldots,OPT, \\
+         g_j(0) & =  \infty, ~ \text{Für} ~ j = 2,\ldots,n, \\
+         g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le
+   c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
+   & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
+\end{align*}
+   \end{beamercolorbox}
+
+   \begin{itemize}
+      \item $\mathcal{O}(OPT\cdot n \cdot \text{Aufwand pro $(c,j)$})$
+         \begin{itemize}
+            \item Pro $(c,j)$ evtl. alle Vorgänger betrachten
+            \item $\mathcal{O}\left(n^2 OPT\right) = \mathcal{O}\left(|E| OPT\right)$
+         \end{itemize}
+         \item Pseudopolynomiell
+   \end{itemize}
+
+\end{frame}
+
+\subsection{Terminierung}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+
+   Man weiß $OPT=\min\left\{c \mid g_n(c) \le T\right\}$
+   \begin{itemize}
+      \item Setze $OPT$, sobald erstes $c$ mit $g_n(c)\le T$ gefunden.
+   \end{itemize}
 \end{frame}
 \end{document}
