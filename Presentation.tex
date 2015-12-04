@@ -1,5 +1,5 @@
 \documentclass{beamer}
-\usepackage[utf8x]{inputenc} 
+\usepackage[utf8x]{inputenc}
 \usepackage[ngerman]{babel} 
 \usepackage{amsmath} 
 \usepackage{caption} 
@@ -21,8 +21,9 @@
 \useinnertheme{circles}
 \useoutertheme{split}
 \setbeamertemplate{itemize subitem}{{\tiny\trianglearrow}}
+\newcommand{\bgcolor}{gray!10!white}
 \setbeamercolor{block title}{bg=gray!20!white}
-\setbeamercolor{block body}{bg=gray!10!white}
+\setbeamercolor{block body}{bg=\bgcolor}
 % \setbeamercolor{block title alerted}{fg=blue,bg=}
 % \setbeamercolor{block body alerted}{bg=gray!10!white}
 
@@ -44,7 +45,7 @@
    \begin{block}{Gegeben}
       \begin{itemize}
          \item azyklischer Graph $G = (V,E)$
-         \item $(u,v) \in E$ hat gewicht $c$ und Verzögerung $t$
+         \item $(u,v) \in E$ hat Gewicht $c$ und Verzögerung $t$
       \end{itemize}
    \end{block}
    \begin{block}{Single Source Shortest Path}
@@ -95,7 +96,7 @@
 \begin{frame}
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
-   \setbeamercolor{bgcolor}{fg=black,bg=lightgray!50!white} % TODO: Use right color
+   \setbeamercolor{bgcolor}{fg=black,bg=\bgcolor}
    \begin{beamercolorbox}[center,wd=\paperwidth]{bgcolor}
       \begin{align*}
          g_1(c) & =  0, ~ \text{Für} ~ c = 0,\ldots,OPT, \\
@@ -135,9 +136,10 @@
 \begin{frame}
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
-   Autobahn? Oder doch lieber Landstraße?
-   \begin{center}
-     \begin{tikzpicture}[node distance=2.5cm,auto]
+   \setbeamercolor{bgcolor}{fg=black,bg=\bgcolor}
+   \begin{block}{Autobahn? Oder doch lieber Landstraße?}
+    \begin{center}
+      \begin{tikzpicture}[node distance=2.5cm,auto]
         \tikzstyle{vertex}=[circle,thick,draw=blue!75]
         \node[vertex] (1) {1};
         \node[vertex] (2) [right of=1] {2};
@@ -169,8 +171,9 @@
               node [above] {$1$} 
               node [below] {$1$}
               (6);
-     \end{tikzpicture}
-   \end{center}
+      \end{tikzpicture}
+    \end{center}
+   \end{block}
 \end{frame}
 
 \begin{frame}
@@ -193,19 +196,6 @@
 \begin{frame}
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
-   \begin{align*}
-      g_2(1) &= \min\left\{ g_2(0), 
-                            \min\limits_{k|c_{kj}\leq c}\left\{
-                                  g_k\left(c-c_{kj}\right) + t_{kj}
-                            \right\}
-                    \right\} \\
-      g_2(1) &= \min\left\{ \infty, 
-                            \min\left\{
-                                  g_1\left(1-1\right) + 1
-                            \right\}
-                    \right\} \\
-      g_2(1) &= 1 \\
-   \end{align*}
    \begin{center}
       \begin{tabular}{>{$}r<{$}|>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}}
       j\backslash c & 0 & 1 & 2 & 3 & 4 & 5  \\
@@ -218,12 +208,6 @@
       6 & \infty & \infty & \infty & \infty & \infty & \infty 
       \end{tabular}
    \end{center}
-\end{frame}
-
-
-\begin{frame}
-   \frametitle{\insertsection}
-   \framesubtitle{\insertsubsection}
    \begin{align*}
       g_2(1) &= \min\left\{ g_2(0), 
                             \min\limits_{k|c_{kj}\leq c}\left\{
@@ -235,8 +219,14 @@
                                   g_1\left(1-1\right) + 1
                             \right\}
                     \right\} \\
-      g_2(1) &= 1 \\
+      g_2(1) &= 1
    \end{align*}
+\end{frame}
+
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
    \begin{center}
       \begin{tabular}{>{$}r<{$}|>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}}
       j\backslash c & 0 & 1 & 2 & 3 & 4 & 5  \\
@@ -282,7 +272,7 @@
    \framesubtitle{\insertsubsection}
 
    $TEST_{magic}(k)$ kann nicht existieren, also schwächer:
-   \begin{block}{Eigenschaften von $TEST(k)$}
+   \only<1>{\begin{block}{Eigenschaften von $TEST(k)$}
       \begin{align*}
          TEST(k) = 
          \begin{cases}
@@ -290,15 +280,75 @@
             0 & \text{falls } OPT < k(1 + \epsilon) \\
          \end{cases} 
       \end{align*}
-   \end{block}
+   \end{block}}
 
-   \begin{block}{$TEST(K)$}
+   \only<2>{\begin{block}{$TEST(k)$}
       \begin{itemize}
-         \item Skaliere und runde Kantengewichte als $\hat{c}_{ij} = \lfloor\frac{c_{ij} (n-1)}{k\epsilon}\rfloor$
-         \item Wende exakten Algorithmus an, bis $g_n(c) \le T$ gefunden ist für $c < \frac{n-1}{\epsilon}$ oder $c \ge
-            \frac{n-1}{\epsilon}$.
+         \item Skaliere und runde Kantengewichte als $\hat{c}_{ij} = \left\lfloor\frac{c_{ij} (n-1)}{k\epsilon}\right\rfloor$
+         \item Wende exakten Algorithmus an, bis $g_n(c) \le T$ gefunden ist 
+               %für $c < \frac{n-1}{\epsilon}$ 
+               oder $c \ge \frac{n-1}{\epsilon}$.
       \end{itemize}
-   \end{block}
+   \end{block}}
 
 \end{frame}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+
+   $TEST(k)$ erfüllt seinen Zweck:
+   \begin{block}{$c<\frac{n-1}{\epsilon}$}
+      \normalsize
+      \begin{align*}
+        k &\leq k \\
+        \frac{k\epsilon}{n-1} \frac{n-1}{\epsilon} &\leq k
+        \intertext{Durch Einsetzen folgt:}
+        \frac{k\epsilon}{n-1} c & < k \\
+        \frac{k\epsilon}{n-1} c + k\epsilon & < k + k\epsilon\\
+        \frac{k\epsilon}{n-1} c + k\epsilon & < k(1+\epsilon)
+      \end{align*}
+   \end{block}
+\end{frame}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+
+   $TEST(k)$ erfüllt seinen Zweck:
+   \begin{block}{$c\geq\frac{n-1}{\epsilon}$}
+      \normalsize
+      \begin{align*}
+         c & \ge \frac{n-1}{\epsilon} \\
+         c \frac{k\epsilon}{n-1} & \ge \frac{k\epsilon}{n-1}\frac{n-1}{\epsilon} \\
+         c \frac{k\epsilon}{n-1} & \ge k
+      \end{align*}
+   \end{block}
+\end{frame}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+   %\begin{lstlisting}[escapeinside={*}{*}]
+      %Setze *$c \leftarrow 0$*
+      %F*ü*r alle *$(i,j)\in E$*:
+         %Falls *$c_{ij}$ > k*, entferne *$(i,j)$*
+         %Sonst *$c_{ij} \leftarrow \lfloor c_{ij}(n-1) / k\epsilon\rfloor$*
+      %%
+      %Falls *$c \ge (n-1) / \epsilon$*, return true
+      %Sonst: 
+         %Wende Algorithmus B an und berechne *$g_j(c)$* f*ü*r *$j=2,\ldots,n$*
+         %Falls *$g_n(c) \le T$*, return false
+         %Sonst:
+            %Setze *$c \leftarrow c + 1$*
+            %Goto Zeile 6
+   %\end{lstlisting}
+   \end{block}
+\end{frame}
+
+\subsection{Upper bounds and lower}
+
+
+
+
 \end{document}
