@@ -1,0 +1,70 @@
+\documentclass{beamer}
+\usepackage[utf8x]{inputenc} 
+\usepackage[ngerman]{babel} 
+\usepackage{amsmath} 
+\usepackage{caption} 
+\usepackage{xcolor} 
+\usepackage{listings} 
+\lstset{
+   basicstyle   = \footnotesize\ttfamily,
+   breaklines   = true,
+   commentstyle = \color{blue},
+   keywordstyle = \color{purple}\textbf,
+   numberstyle  = \tiny\color{gray},
+   numbers      = left,
+   stringstyle  = \color{olive},
+}
+\newcommand{\trianglearrow}{{\usebeamercolor[fg]{block title} $\blacktriangleright$ }} 
+
+\usecolortheme{seagull}
+\useinnertheme{circles}
+\useoutertheme{split}
+\title{FPTAS für das Restricted Shortest Path-Problem}
+\author{Rasmus Diederichsen \and Sebastian Höffner}
+\institute{Universität Osnabrück}
+\date{\today}
+
+\begin{document}
+\frame{\titlepage}
+\begin{frame}
+   \frametitle{Inhalt}
+   \tableofcontents
+\end{frame}
+
+\section{Das Problem}
+\begin{frame}
+   \begin{block}{Gegeben}
+      \begin{itemize}
+         \item azyklischer Graph $G = (V,E)$
+         \item $(u,v) \in E$ hat gewicht $c$ und Verzögerung $t$
+      \end{itemize}
+   \end{block}
+   \frametitle{Problemstellung}
+   \begin{block}{Single Source Shortest Path}
+      Berechne vom Startknoten aus alle nach Kosten kürzesten Wege zu allen
+      anderen \trianglearrow Dijkstra
+   \end{block}
+   \begin{block}{All Pairs Shortest Path}
+      Kürzeste Wege zwischen allen Knotenpaaren \trianglearrow Floyd
+   \end{block}
+   \begin{alertblock}{Restricted Shortest Path}
+      Finde nach Kosten kürzesten Weg von $a$ nach $b$ mit Verzögerung $\le T$
+   \end{alertblock}
+\end{frame}
+
+\section{Exakte Lösung}
+\begin{frame}
+   \frametitle{\insertsection}
+
+   Dynamische Programmierung (ähnlich wie Knapsack)
+   \begin{block}{Algorithmus}
+      \begin{align*}
+         g_1(c) & =  0, ~ \text{Für} ~ c = 0,\ldots,OPT, \\
+         g_j(0) & =  \infty, ~ \text{Für} ~ j = 2,\ldots,n, \\
+         g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le
+   c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
+   & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
+      \end{align*}
+   \end{block}
+\end{frame}
+\end{document}
