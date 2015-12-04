@@ -16,10 +16,13 @@
 }
 \newcommand{\trianglearrow}{{\usebeamercolor[fg]{block title} $\blacktriangleright$ }} 
 
-\usecolortheme{seagull}
 \useinnertheme{circles}
 \useoutertheme{split}
 \setbeamertemplate{itemize subitem}{{\tiny\trianglearrow}}
+\setbeamercolor{block title}{bg=gray!20!white}
+\setbeamercolor{block body}{bg=gray!10!white}
+% \setbeamercolor{block title alerted}{fg=blue,bg=}
+% \setbeamercolor{block body alerted}{bg=gray!10!white}
 
 \title{FPTAS für das Restricted Shortest Path-Problem}
 \author{Rasmus Diederichsen \and Sebastian Höffner}
@@ -35,13 +38,13 @@
 
 \section{Das Problem}
 \begin{frame}
+   \frametitle{Problemstellung}
    \begin{block}{Gegeben}
       \begin{itemize}
          \item azyklischer Graph $G = (V,E)$
          \item $(u,v) \in E$ hat gewicht $c$ und Verzögerung $t$
       \end{itemize}
    \end{block}
-   \frametitle{Problemstellung}
    \begin{block}{Single Source Shortest Path}
       Berechne vom Startknoten aus alle nach Kosten kürzesten Wege zu allen
       anderen \trianglearrow Dijkstra
@@ -49,8 +52,20 @@
    \begin{block}{All Pairs Shortest Path}
       Kürzeste Wege zwischen allen Knotenpaaren \trianglearrow Floyd
    \end{block}
+\end{frame}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+   \begin{block}{Gegeben}
+      \begin{itemize}
+         \item azyklischer Graph $G = (V,E)$
+         \item $(u,v) \in E$ hat gewicht $c$ und Verzögerung $t$
+      \end{itemize}
+   \end{block}
    \begin{alertblock}{Restricted Shortest Path}
-      Finde nach Kosten kürzesten Weg von $a$ nach $b$ mit Verzögerung $\le T$
+      Finde nach Kosten kürzesten Weg von $a$ nach $b$ mit Verzögerung $\le T$.
+      \textbf{NP}-schwer.
    \end{alertblock}
 \end{frame}
 
@@ -95,7 +110,7 @@
             \item Pro $(c,j)$ evtl. alle Vorgänger betrachten
             \item $\mathcal{O}\left(n^2 OPT\right) = \mathcal{O}\left(|E| OPT\right)$
          \end{itemize}
-         \item Pseudopolynomiell
+      \item Pseudopolynomiell
    \end{itemize}
 
 \end{frame}
@@ -110,5 +125,56 @@
    \begin{itemize}
       \item Setze $OPT$, sobald erstes $c$ mit $g_n(c)\le T$ gefunden.
    \end{itemize}
+\end{frame}
+
+\section{Das FPTAS}
+
+\subsection{Test für Grenzen von $OPT$}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+
+   Wir suchen zunächst Verfahren, dass untere und obere Schranken für $OPT$
+   findet.
+   \begin{itemize}
+      \item Wünsch-dir-was: Polynomieller Algorithmus $TEST(k)$, sodass
+         \begin{align*}
+            TEST_{magic}(k) = 
+            \begin{cases}
+               1 & \text{falls } OPT \ge k \\
+               0 & \text{falls } OPT < k \\
+            \end{cases} 
+         \end{align*}
+         \begin{itemize}
+            \item Binäre Suche auf ${0,\ldots,UB}$ 
+            \item Leider \textbf{NP}-schwer
+         \end{itemize}
+   \end{itemize}
+\end{frame}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+
+   $TEST_{magic}(k)$ kann nicht existieren, also schwächer:
+   \begin{block}{Eigenschaften von $TEST(k)$}
+      \begin{align*}
+         TEST(k) = 
+         \begin{cases}
+            1 & \text{falls } OPT \ge k \\
+            0 & \text{falls } OPT < k(1 + \epsilon) \\
+         \end{cases} 
+      \end{align*}
+   \end{block}
+
+   \begin{block}{$TEST(K)$}
+      \begin{itemize}
+         \item Skaliere und runde Kantengewichte als $\hat{c}_{ij} = \lfloor\frac{c_{ij} (n-1)}{k\epsilon}\rfloor$
+         \item Wende exakten Algorithmus an, bis $g_n(c) \le T$ gefunden ist für $c < \frac{n-1}{\epsilon}$ oder $c \ge
+            \frac{n-1}{\epsilon}$.
+      \end{itemize}
+   \end{block}
+
 \end{frame}
 \end{document}
