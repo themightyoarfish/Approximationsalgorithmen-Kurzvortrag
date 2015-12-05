@@ -299,7 +299,7 @@
 
    $TEST(k)$ erfüllt seinen Zweck:
    \begin{block}{$c<\frac{n-1}{\epsilon}$}
-      \normalsize
+\setlength\abovedisplayskip{-12pt}
       \begin{align*}
         k &\leq k \\
         \frac{k\epsilon}{n-1} \frac{n-1}{\epsilon} &\leq k
@@ -317,7 +317,6 @@
 
    $TEST(k)$ erfüllt seinen Zweck:
    \begin{block}{$c\geq\frac{n-1}{\epsilon}$}
-      \normalsize
       \begin{align*}
          c & \ge \frac{n-1}{\epsilon} \\
          c \frac{k\epsilon}{n-1} & \ge \frac{k\epsilon}{n-1}\frac{n-1}{\epsilon} \\
@@ -343,7 +342,7 @@
             %Setze *$c \leftarrow c + 1$*
             %Goto Zeile 6
    %\end{lstlisting}
-   \end{block}
+   % \end{block}
 \end{frame}
 
 \subsection{Upper bounds and lower}
