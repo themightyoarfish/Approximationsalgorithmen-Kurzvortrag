@@ -10,13 +10,13 @@
    breaklines   = true,
    commentstyle = \color{blue},
    keywordstyle = \color{purple}\textbf,
-   numberstyle  = \tiny\color{gray},
+   numberstyle  = \small\color{gray},
    numbers      = left,
    stringstyle  = \color{olive},
 }
 \usepackage{array}
 \usepackage{tikz}
-\newcommand{\trianglearrow}{{\usebeamercolor[fg]{block title} $\blacktriangleright$ }} 
+\newcommand{\trianglearrow}{{\tiny\usebeamercolor[bg]{block title} \raisebox{.5ex}{$\blacktriangleright$} }} % hacky
 
 \usetheme{UOS}
 \useinnertheme{circles}
@@ -320,24 +320,42 @@ g_2(1) &= 1
    \end{block}
 \end{frame}
 
+\begin{frame}[fragile]
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+   \begin{block}{Test-Algorithmus}
+      \begin{lstlisting}[xleftmargin=3em,escapeinside={*}{*},gobble=6]
+      Setze *$c \leftarrow 0$*
+      F*ü*r alle *$(i,j)\in E$*:
+         Falls *$c_{ij}$ > k*, entferne *$(i,j)$*
+         Sonst *$c_{ij} \leftarrow \lfloor c_{ij}(n-1) / k\epsilon\rfloor$*
+
+      Falls *$c \ge (n-1) / \epsilon$*, return true
+      Sonst: 
+         Wende Algorithmus B an und berechne *$g_j(c)$* f*ü*r *$j=2,\ldots,n$*
+         Falls *$g_n(c) \le T$*, return false
+         Sonst:
+            Setze *$c \leftarrow c + 1$*
+            Goto Zeile 6
+      \end{lstlisting}
+   \end{block}
+\end{frame}
+
+\subsection{Laufzeit von $TEST$}
+
 \begin{frame}
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
-   %\begin{lstlisting}[escapeinside={*}{*}]
-   %Setze *$c \leftarrow 0$*
-   %F*ü*r alle *$(i,j)\in E$*:
-   %Falls *$c_{ij}$ > k*, entferne *$(i,j)$*
-   %Sonst *$c_{ij} \leftarrow \lfloor c_{ij}(n-1) / k\epsilon\rfloor$*
-   %%
-   %Falls *$c \ge (n-1) / \epsilon$*, return true
-   %Sonst: 
-   %Wende Algorithmus B an und berechne *$g_j(c)$* f*ü*r *$j=2,\ldots,n$*
-   %Falls *$g_n(c) \le T$*, return false
-   %Sonst:
-   %Setze *$c \leftarrow c + 1$*
-   %Goto Zeile 6
-   %\end{lstlisting}
-   % \end{block}
+   \begin{itemize}
+      \item Runden: in $\mathcal{O}(\log{n})$ durch binäre Suche, falls nach
+         oben beschränkt \trianglearrow $\mathcal{O}\left(|E|\log{\frac{n-1}{\epsilon}}\right)$
+      \item Exakter Algorithmus führt $\le \frac{n-1}{\epsilon}$ Iterationen
+         durch, $\mathcal{O}\left(|E|\right)$ pro Iteration
+         \begin{itemize}
+            \item Insgesamt $\mathcal{O}\left(|E|\log{\frac{n-1}{\epsilon}} + |E|\frac{n-1}{\epsilon}\right) = \mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)$
+         \end{itemize}
+   \end{itemize}
+
 \end{frame}
 
 \subsection{Upper bounds and lower}
