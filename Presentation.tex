@@ -146,7 +146,7 @@
         \node[vertex] (3) [below right of=2] {3};
         \node[vertex] (4) [above right of=2] {4};
         \node[vertex] (5) [below right of=4] {5};
-        \node[vertex] (6) [right of=5] {N=6};
+        \node[vertex] (6) [right of=5] {n=6};
         \draw [-to] (1) -- 
               node [above] {$t_{12}=1$} 
               node [below] {$c_{12}=1$}
@@ -343,11 +343,49 @@
             %Setze *$c \leftarrow c + 1$*
             %Goto Zeile 6
    %\end{lstlisting}
-   \end{block}
 \end{frame}
 
 \subsection{Upper bounds and lower}
 
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+   Wir benötigen obere und untere Schranken $LB \le OPT \le UB$.
+   \only<1>{\begin{block}{Lower Bound}
+     \begin{itemize}
+       \item $LB = 1$
+       \item $LB =$ kürzester Pfad nach Kosten
+     \end{itemize}
+   \end{block}}
+  
+  \only<2>{\begin{block}{Upper Bound}
+     \begin{itemize}
+       \item $UB = \sum (n-1) \text{längste Kanten}$
+       \item $UB =$ Kosten schnellster Pfad von $1$ nach $n$.
+     \end{itemize}
+   \end{block}}
+\end{frame}
+
+\subsection{Algorithmus}
+
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+%\begin{lstlisting}[escapeinside={*}{*}]
+%*$UB := \sum (n-1) \text{ größte Kosten}$*
+%*$LB := 1$*
+%
+%Falls *$UB \le 2LB$*, Goto Zeile 11
+%Sonst:
+   %*$k := \sqrt{UB \cdot LB}$*
+   %Falls *$TEST(k)$* == true, *$LB := k$*
+   %Sonst *$UB := k(1 + \epsilon)$*
+   %Goto Zeile 4
+%
+   %Setze *$c_{ij} \leftarrow c_{ij} (n-1)/LB\epsilon$*
+   %Berechne mit Algorithmus B die optimale L*ö*sung
+%\end{lstlisting}
+\end{frame}
 
 
 
