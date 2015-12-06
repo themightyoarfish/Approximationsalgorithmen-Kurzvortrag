@@ -5,7 +5,11 @@
 \usepackage{caption} 
 \usepackage{xcolor} 
 \usepackage{listings}
+\usepackage{wasysym}
 \lstset{
+   xleftmargin  = 3em,
+   escapeinside = {*}{*},
+   gobble=6,
    basicstyle   = \footnotesize\ttfamily,
    breaklines   = true,
    commentstyle = \color{blue},
@@ -117,6 +121,15 @@
 \begin{frame}
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
+
+   \begin{beamercolorbox}[center,wd=\paperwidth]{block body}
+      \begin{align*}
+         g_1(c) & =  0, ~ \text{Für} ~ c = 0,\ldots,OPT, \\
+         g_j(0) & =  \infty, ~ \text{Für} ~ j = 2,\ldots,n, \\
+         g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
+                & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
+      \end{align*}
+   \end{beamercolorbox}
 
    Man weiß $OPT=\min\left\{c \mid g_n(c) \le T\right\}$
    \begin{itemize}
@@ -267,7 +280,8 @@ g_2(1) &= 1
    \framesubtitle{\insertsubsection}
 
    $TEST_{magic}(k)$ kann nicht existieren, also schwächer:
-   \only<1>{\begin{block}{Eigenschaften von $TEST(k)$}
+   \only<1>{
+      \begin{block}{Eigenschaften von $TEST(k)$}
          \begin{align*}
             TEST(k) = 
             \begin{cases}
@@ -275,16 +289,19 @@ g_2(1) &= 1
                0 & \text{falls } OPT < k(1 + \epsilon) \\
             \end{cases} 
          \end{align*}
-   \end{block}}
+      \end{block}
+   }
 
-   \only<2>{\begin{block}{$TEST(k)$}
+   \only<2>{
+      \begin{block}{$TEST(k)$}
          \begin{itemize}
             \item Skaliere und runde Kantengewichte als $\hat{c}_{ij} = \left\lfloor\frac{c_{ij} (n-1)}{k\epsilon}\right\rfloor$
             \item Wende exakten Algorithmus an, bis $g_n(c) \le T$ gefunden ist 
                %für $c < \frac{n-1}{\epsilon}$ 
                oder $c \ge \frac{n-1}{\epsilon}$.
          \end{itemize}
-   \end{block}}
+      \end{block}
+   }
 
 \end{frame}
 
@@ -293,38 +310,39 @@ g_2(1) &= 1
    \framesubtitle{\insertsubsection}
 
    $TEST(k)$ erfüllt seinen Zweck:
-   \begin{block}{$c<\frac{n-1}{\epsilon}$}
-      \setlength\abovedisplayskip{-12pt}
-      \begin{align*}
-         k &\leq k \\
-         \frac{k\epsilon}{n-1} \frac{n-1}{\epsilon} &\leq k
-         \intertext{Durch Einsetzen folgt:}
-         \frac{k\epsilon}{n-1} c & < k \\
-         \frac{k\epsilon}{n-1} c + k\epsilon & < k + k\epsilon\\
-         \frac{k\epsilon}{n-1} c + k\epsilon & < k(1+\epsilon)
-      \end{align*}
-   \end{block}
-\end{frame}
-
-\begin{frame}
-   \frametitle{\insertsection}
-   \framesubtitle{\insertsubsection}
-
-   $TEST(k)$ erfüllt seinen Zweck:
-   \begin{block}{$c\geq\frac{n-1}{\epsilon}$}
-      \begin{align*}
-         c & \ge \frac{n-1}{\epsilon} \\
-         c \frac{k\epsilon}{n-1} & \ge \frac{k\epsilon}{n-1}\frac{n-1}{\epsilon} \\
-         c \frac{k\epsilon}{n-1} & \ge k
-      \end{align*}
-   \end{block}
+   \only<1>
+   {
+      \begin{block}{$c<\frac{n-1}{\epsilon}$ $\rightarrow$ Es gibt Pfad $ < k(1+\epsilon)$}
+         \small
+         \setlength\abovedisplayskip{-12pt}
+         \begin{align*}
+            k &\leq k \\
+            \frac{k\epsilon}{n-1} \frac{n-1}{\epsilon} &\leq k
+            \intertext{Durch Einsetzen folgt:}
+            \frac{k\epsilon}{n-1} c & < k \\
+            \frac{k\epsilon}{n-1} c + k\epsilon & < k + k\epsilon\\
+            \frac{k\epsilon}{n-1} c + k\epsilon & < k(1+\epsilon)
+         \end{align*}
+      \end{block}
+   }
+   \only<2>
+   {
+      \begin{block}{$c\geq\frac{n-1}{\epsilon}$ $\rightarrow$ Jeder $T$-Pfad hat
+         Länge $\ge k$}
+         \begin{align*}
+            c & \ge \frac{n-1}{\epsilon} \\
+            c \frac{k\epsilon}{n-1} & \ge \frac{k\epsilon}{n-1}\frac{n-1}{\epsilon} \\
+            c \frac{k\epsilon}{n-1} & \ge k
+         \end{align*}
+      \end{block}
+   }
 \end{frame}
 
 \begin{frame}[fragile]
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
    \begin{block}{Test-Algorithmus}
-      \begin{lstlisting}[xleftmargin=3em,escapeinside={*}{*},gobble=6]
+      \begin{lstlisting}
       Setze *$c \leftarrow 0$*
       F*ü*r alle *$(i,j)\in E$*:
          Falls *$c_{ij}$ > k*, entferne *$(i,j)$*
@@ -341,7 +359,7 @@ g_2(1) &= 1
    \end{block}
 \end{frame}
 
-\subsection{Laufzeit von $TEST$}
+\subsection{Laufzeit von des Tests}
 
 \begin{frame}
    \frametitle{\insertsection}
@@ -358,25 +376,29 @@ g_2(1) &= 1
 
 \end{frame}
 
-\subsection{Upper bounds and lower}
+\subsection{Verbesserte Grenzen von $OPT$}
 
 \begin{frame}
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
    Wir benötigen obere und untere Schranken $LB \le OPT \le UB$.
-   \only<1>{\begin{block}{Lower Bound}
-     \begin{itemize}
-       \item $LB = 1$
-       \item $LB =$ kürzester Pfad nach Kosten
-     \end{itemize}
-   \end{block}}
+   \only<1>{
+      \begin{block}{Lower Bound}
+         \begin{itemize}
+            \item $LB = 1$
+            \item $LB =$ kürzester Pfad nach Kosten
+         \end{itemize}
+      \end{block}
+   }
   
-  \only<2>{\begin{block}{Upper Bound}
-     \begin{itemize}
-       \item $UB = \sum (n-1) \text{längste Kanten}$
-       \item $UB =$ Kosten schnellster Pfad von $1$ nach $n$.
-     \end{itemize}
-   \end{block}}
+   \only<2>{
+      \begin{block}{Upper Bound}
+         \begin{itemize}
+            \item $UB = \sum (n-1)~ \text{längste Kanten}$
+            \item $UB =$ Kosten schnellster Pfad von $1$ nach $n$.
+         \end{itemize}
+      \end{block}
+   }
 \end{frame}
 
 \subsection{Algorithmus}
@@ -384,7 +406,8 @@ g_2(1) &= 1
 \begin{frame}[fragile]
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
-      \begin{lstlisting}[escapeinside={*}{*}]
+   \begin{block}{Approximationsschema-Algorithmus}
+      \begin{lstlisting}
       *$UB := \sum (n-1) \text{ größte Kosten}$*
       *$LB := 1$*
 
@@ -395,11 +418,34 @@ g_2(1) &= 1
          Sonst *$UB := k(1 + \epsilon)$*
          Goto Zeile 4
 
-         Setze *$c_{ij} \leftarrow c_{ij} (n-1)/LB\epsilon$*
-         Berechne optimale L*ö*sung
+      Setze *$c_{ij} \leftarrow c_{ij} (n-1)/LB\epsilon$*
+      Berechne optimale L*ö*sung
       \end{lstlisting}
+   \end{block}
 \end{frame}
 
+\subsection{Laufzeit des FPTAS}
+\begin{frame}
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+   \begin{itemize}[<+->]
+      \item Wie für $TEST$ kann Abweichung vom $OPT$ nicht größer
+         als $k\epsilon$ sein, hier mit $k=LB$, die Abweichung ist also $\le
+         OPT\epsilon$
+      \item Rundung der Kantenkosten: Laufzeit letzte Anwendung
+         des exkaten Algorithmus' ist $\mathcal{O}\left(|E| OPT\frac{(n-1)}{LB\epsilon}\right)$
+      \item $OPT \le 2LB$: $\mathcal{O}(|E| 2LB\frac{(n-1)}{LB\epsilon})=\mathcal{O}(|E|
+         2\frac{(n-1)}{\epsilon})=\mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)$
+      \item Laut Hassin $\log{\log{\frac{UB}{LB}}}$ Tests, bis $\frac{UB}{LB} \le 2$
+         \earth
+      \item Wurzeln evtl. teuer, es reicht aber $\log{\log{\frac{UB}{LB}}}$ \earth
+      \item Einzelne Aufrufe von $TEST$: $\mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)$
+      \item Insgesamt $\mathcal{O}(\log\log{\frac{UB}{LB}\cdot(|E|\frac{n-1}{\epsilon} +
+         \log\log{\frac{UB}{LB}})})$
+   \end{itemize}
+\end{frame}
 
-
+\begin{frame}
+   \centerline{Fin.}
+\end{frame}
 \end{document}

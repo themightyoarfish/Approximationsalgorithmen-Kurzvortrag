@@ -128,7 +128,9 @@ Originalgraphen größer gleich
    c \frac{k\epsilon}{n-1} & \ge k \\
 \end{align*}
 
-Somit leistet der Test das Geforderte.
+Zudem ist $g_n(c)$ der schnellste $T$-Pfad, alle anderen sind also höchstens so
+schnell.  Somit leistet der Test das Geforderte.
+
 \begin{lstlisting}[escapeinside={*}{*}]
 Setze *$c \leftarrow 0$*
 F*ü*r alle *$(i,j)\in E$*:
@@ -181,7 +183,7 @@ eine Art binäre Suche lassen sich die Grenzen schnell einengen. Man tut dies, b
 $\frac{UB}{LB} \le 2$ oder eine andere Konstante. Die Werte für $k$ werden als
 $\sqrt{UB \cdot LB}$ berechnet (\textcolor{red}{warum?}).
 
-Um das Problem approximativ zu lösen, wendet man nun Algorithmus B auf skalierte
+Um das Problem approximativ zu lösen, wendet man nun Algorithmus B auf eine skalierte
 und gerundete Instanz mit Gewichten $c_{ij}(n-1)/LB\epsilon$ an. Die Abweichung
 vom optimalen Pfad kann (wie für $TEST$ gezeigt) nicht größer als $k\epsilon$,
 hier also $LB\epsilon < OPT\epsilon$ sein.
