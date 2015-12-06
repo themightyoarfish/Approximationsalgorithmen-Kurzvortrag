@@ -10,22 +10,18 @@
    breaklines   = true,
    commentstyle = \color{blue},
    keywordstyle = \color{purple}\textbf,
-   numberstyle  = \tiny\color{gray},
+   numberstyle  = \small\color{gray},
    numbers      = left,
    stringstyle  = \color{olive},
 }
 \usepackage{array}
 \usepackage{tikz}
-\newcommand{\trianglearrow}{{\usebeamercolor[fg]{block title} $\blacktriangleright$ }} 
+\newcommand{\trianglearrow}{{\tiny\usebeamercolor[bg]{block title} \raisebox{.5ex}{$\blacktriangleright$} }} % hacky
 
+\usetheme{UOS}
 \useinnertheme{circles}
 \useoutertheme{split}
-\setbeamertemplate{itemize subitem}{{\tiny\trianglearrow}}
-\newcommand{\bgcolor}{gray!10!white}
-\setbeamercolor{block title}{bg=gray!20!white}
-\setbeamercolor{block body}{bg=\bgcolor}
-% \setbeamercolor{block title alerted}{fg=blue,bg=}
-% \setbeamercolor{block body alerted}{bg=gray!10!white}
+\setbeamertemplate{itemize subitem}[triangle]
 
 \title{FPTAS für das Restricted Shortest Path-Problem}
 \author{Rasmus Diederichsen \and Sebastian Höffner}
@@ -96,15 +92,13 @@
 \begin{frame}
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
-   \setbeamercolor{bgcolor}{fg=black,bg=\bgcolor}
-   \begin{beamercolorbox}[center,wd=\paperwidth]{bgcolor}
+   \begin{beamercolorbox}[center,wd=\paperwidth]{block body}
       \begin{align*}
          g_1(c) & =  0, ~ \text{Für} ~ c = 0,\ldots,OPT, \\
          g_j(0) & =  \infty, ~ \text{Für} ~ j = 2,\ldots,n, \\
-         g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le
-   c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
-   & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
-\end{align*}
+         g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
+                & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
+      \end{align*}
    \end{beamercolorbox}
 
    \begin{itemize}
@@ -138,41 +132,42 @@
    \framesubtitle{\insertsubsection}
    \setbeamercolor{bgcolor}{fg=black,bg=\bgcolor}
    \begin{block}{Autobahn? Oder doch lieber Landstraße?}
-    \begin{center}
-      \begin{tikzpicture}[node distance=2.5cm,auto]
-        \tikzstyle{vertex}=[circle,thick,draw=blue!75]
-        \node[vertex] (1) {1};
-        \node[vertex] (2) [right of=1] {2};
-        \node[vertex] (3) [below right of=2] {3};
-        \node[vertex] (4) [above right of=2] {4};
-        \node[vertex] (5) [below right of=4] {5};
-        \node[vertex] (6) [right of=5] {n=6};
-        \draw [-to] (1) -- 
-              node [above] {$t_{12}=1$} 
-              node [below] {$c_{12}=1$}
-              (2);
-        \draw [-to] (2) -- 
-              node [above] {$2$} 
-              node [below] {$1$}
-              (3);
-        \draw [-to] (2) -- 
-              node [above] {$1$} 
-              node [below] {$2$}
-              (4);
-        \draw [-to] (3) -- 
-              node [above] {$1$} 
-              node [below] {$1$}
-              (5);
-        \draw [-to] (4) -- 
-              node [above] {$1$} 
-              node [below] {$1$}
-              (5);
-        \draw [-to] (5) -- 
-              node [above] {$1$} 
-              node [below] {$1$}
-              (6);
-      \end{tikzpicture}
-    \end{center}
+      \begin{center}
+         \tikzstyle{vertex}=[circle,thick,draw=block title.bg]
+         \begin{tikzpicture}[node distance=2.5cm,auto,
+            vertex/.append style={fill=white}]
+            \node[vertex] (1) {1};
+            \node[vertex] (2) [right of=1] {2};
+            \node[vertex] (3) [below right of=2] {3};
+            \node[vertex] (4) [above right of=2] {4};
+            \node[vertex] (5) [below right of=4] {5};
+            \node[vertex] (6) [right of=5] {n=6};
+            \draw [-to] (1) -- 
+            node [above] {$t_{12}=1$} 
+            node [below] {$c_{12}=1$}
+            (2);
+            \draw [-to] (2) -- 
+            node [above] {$2$} 
+            node [below] {$1$}
+            (3);
+            \draw [-to] (2) -- 
+            node [above] {$1$} 
+            node [below] {$2$}
+            (4);
+            \draw [-to] (3) -- 
+            node [above] {$1$} 
+            node [below] {$1$}
+            (5);
+            \draw [-to] (4) -- 
+            node [above] {$1$} 
+            node [below] {$1$}
+            (5);
+            \draw [-to] (5) -- 
+            node [above] {$1$} 
+            node [below] {$1$}
+            (6);
+         \end{tikzpicture}
+      \end{center}
    \end{block}
 \end{frame}
 
@@ -181,14 +176,14 @@
    \framesubtitle{\insertsubsection}
    \begin{center}
       \begin{tabular}{>{$}r<{$}|>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}}
-      j\backslash c & 0 & 1 & 2 & 3 & 4 & 5  \\
-      \hline
-      1 & 0 & 0 & 0 & 0 & 0 & 0 \\
-      2 & \infty & \infty & \infty & \infty & \infty & \infty \\
-      3 & \infty & \infty & \infty & \infty & \infty & \infty \\
-      4 & \infty & \infty & \infty & \infty & \infty & \infty \\
-      5 & \infty & \infty & \infty & \infty & \infty & \infty \\
-      6 & \infty & \infty & \infty & \infty & \infty & \infty 
+         j\backslash c & 0 & 1 & 2 & 3 & 4 & 5  \\
+         \hline
+         1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+         2 & \infty & \infty & \infty & \infty & \infty & \infty \\
+         3 & \infty & \infty & \infty & \infty & \infty & \infty \\
+         4 & \infty & \infty & \infty & \infty & \infty & \infty \\
+         5 & \infty & \infty & \infty & \infty & \infty & \infty \\
+         6 & \infty & \infty & \infty & \infty & \infty & \infty 
       \end{tabular}
    \end{center}
 \end{frame}
@@ -198,28 +193,28 @@
    \framesubtitle{\insertsubsection}
    \begin{center}
       \begin{tabular}{>{$}r<{$}|>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}}
-      j\backslash c & 0 & 1 & 2 & 3 & 4 & 5  \\
-      \hline
-      1 & 0 & 0 & 0 & 0 & 0 & 0 \\
-      2 & \infty & 1 & \infty & \infty & \infty & \infty \\
-      3 & \infty & \infty & \infty & \infty & \infty & \infty \\
-      4 & \infty & \infty & \infty & \infty & \infty & \infty \\
-      5 & \infty & \infty & \infty & \infty & \infty & \infty \\
-      6 & \infty & \infty & \infty & \infty & \infty & \infty 
+         j\backslash c & 0 & 1 & 2 & 3 & 4 & 5  \\
+         \hline
+         1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+         2 & \infty & 1 & \infty & \infty & \infty & \infty \\
+         3 & \infty & \infty & \infty & \infty & \infty & \infty \\
+         4 & \infty & \infty & \infty & \infty & \infty & \infty \\
+         5 & \infty & \infty & \infty & \infty & \infty & \infty \\
+         6 & \infty & \infty & \infty & \infty & \infty & \infty 
       \end{tabular}
    \end{center}
    \begin{align*}
       g_2(1) &= \min\left\{ g_2(0), 
-                            \min\limits_{k|c_{kj}\leq c}\left\{
-                                  g_k\left(c-c_{kj}\right) + t_{kj}
-                            \right\}
-                    \right\} \\
-      g_2(1) &= \min\left\{ \infty, 
-                            \min\left\{
-                                  g_1\left(1-1\right) + 1
-                            \right\}
-                    \right\} \\
-      g_2(1) &= 1
+      \min\limits_{k|c_{kj}\leq c}\left\{
+         g_k\left(c-c_{kj}\right) + t_{kj}
+      \right\}
+   \right\} \\
+   g_2(1) &= \min\left\{ \infty, 
+   \min\left\{
+      g_1\left(1-1\right) + 1
+   \right\}
+\right\} \\
+g_2(1) &= 1
    \end{align*}
 \end{frame}
 
@@ -229,14 +224,14 @@
    \framesubtitle{\insertsubsection}
    \begin{center}
       \begin{tabular}{>{$}r<{$}|>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}>{$}r<{$}}
-      j\backslash c & 0 & 1 & 2 & 3 & 4 & 5  \\
-      \hline
-      1 & 0 & 0 & 0 & 0 & 0 & 0 \\
-      2 & \infty & 1 & 1 & 1 & 1 & 1 \\
-      3 & \infty & \infty & 3 & 3 & 3 & 3 \\
-      4 & \infty & \infty & \infty & 2 & 2 & 2 \\
-      5 & \infty & \infty & \infty & 4 & 3 & 3 \\
-      6 & \infty & \infty & \infty & \infty & 5 & \textbf{4} 
+         j\backslash c & 0 & 1 & 2 & 3 & 4 & 5  \\
+         \hline
+         1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+         2 & \infty & 1 & 1 & 1 & 1 & 1 \\
+         3 & \infty & \infty & 3 & 3 & 3 & 3 \\
+         4 & \infty & \infty & \infty & 2 & 2 & 2 \\
+         5 & \infty & \infty & \infty & 4 & 3 & 3 \\
+         6 & \infty & \infty & \infty & \infty & 5 & \textbf{4} 
       \end{tabular}
    \end{center}
 \end{frame}
@@ -273,22 +268,22 @@
 
    $TEST_{magic}(k)$ kann nicht existieren, also schwächer:
    \only<1>{\begin{block}{Eigenschaften von $TEST(k)$}
-      \begin{align*}
-         TEST(k) = 
-         \begin{cases}
-            1 & \text{falls } OPT \ge k \\
-            0 & \text{falls } OPT < k(1 + \epsilon) \\
-         \end{cases} 
-      \end{align*}
+         \begin{align*}
+            TEST(k) = 
+            \begin{cases}
+               1 & \text{falls } OPT \ge k \\
+               0 & \text{falls } OPT < k(1 + \epsilon) \\
+            \end{cases} 
+         \end{align*}
    \end{block}}
 
    \only<2>{\begin{block}{$TEST(k)$}
-      \begin{itemize}
-         \item Skaliere und runde Kantengewichte als $\hat{c}_{ij} = \left\lfloor\frac{c_{ij} (n-1)}{k\epsilon}\right\rfloor$
-         \item Wende exakten Algorithmus an, bis $g_n(c) \le T$ gefunden ist 
+         \begin{itemize}
+            \item Skaliere und runde Kantengewichte als $\hat{c}_{ij} = \left\lfloor\frac{c_{ij} (n-1)}{k\epsilon}\right\rfloor$
+            \item Wende exakten Algorithmus an, bis $g_n(c) \le T$ gefunden ist 
                %für $c < \frac{n-1}{\epsilon}$ 
                oder $c \ge \frac{n-1}{\epsilon}$.
-      \end{itemize}
+         \end{itemize}
    \end{block}}
 
 \end{frame}
@@ -299,14 +294,14 @@
 
    $TEST(k)$ erfüllt seinen Zweck:
    \begin{block}{$c<\frac{n-1}{\epsilon}$}
-      \normalsize
+      \setlength\abovedisplayskip{-12pt}
       \begin{align*}
-        k &\leq k \\
-        \frac{k\epsilon}{n-1} \frac{n-1}{\epsilon} &\leq k
-        \intertext{Durch Einsetzen folgt:}
-        \frac{k\epsilon}{n-1} c & < k \\
-        \frac{k\epsilon}{n-1} c + k\epsilon & < k + k\epsilon\\
-        \frac{k\epsilon}{n-1} c + k\epsilon & < k(1+\epsilon)
+         k &\leq k \\
+         \frac{k\epsilon}{n-1} \frac{n-1}{\epsilon} &\leq k
+         \intertext{Durch Einsetzen folgt:}
+         \frac{k\epsilon}{n-1} c & < k \\
+         \frac{k\epsilon}{n-1} c + k\epsilon & < k + k\epsilon\\
+         \frac{k\epsilon}{n-1} c + k\epsilon & < k(1+\epsilon)
       \end{align*}
    \end{block}
 \end{frame}
@@ -317,7 +312,6 @@
 
    $TEST(k)$ erfüllt seinen Zweck:
    \begin{block}{$c\geq\frac{n-1}{\epsilon}$}
-      \normalsize
       \begin{align*}
          c & \ge \frac{n-1}{\epsilon} \\
          c \frac{k\epsilon}{n-1} & \ge \frac{k\epsilon}{n-1}\frac{n-1}{\epsilon} \\
@@ -326,23 +320,42 @@
    \end{block}
 \end{frame}
 
+\begin{frame}[fragile]
+   \frametitle{\insertsection}
+   \framesubtitle{\insertsubsection}
+   \begin{block}{Test-Algorithmus}
+      \begin{lstlisting}[xleftmargin=3em,escapeinside={*}{*},gobble=6]
+      Setze *$c \leftarrow 0$*
+      F*ü*r alle *$(i,j)\in E$*:
+         Falls *$c_{ij}$ > k*, entferne *$(i,j)$*
+         Sonst *$c_{ij} \leftarrow \lfloor c_{ij}(n-1) / k\epsilon\rfloor$*
+
+      Falls *$c \ge (n-1) / \epsilon$*, return true
+      Sonst: 
+         Wende Algorithmus B an und berechne *$g_j(c)$* f*ü*r *$j=2,\ldots,n$*
+         Falls *$g_n(c) \le T$*, return false
+         Sonst:
+            Setze *$c \leftarrow c + 1$*
+            Goto Zeile 6
+      \end{lstlisting}
+   \end{block}
+\end{frame}
+
+\subsection{Laufzeit von $TEST$}
+
 \begin{frame}
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
-   %\begin{lstlisting}[escapeinside={*}{*}]
-      %Setze *$c \leftarrow 0$*
-      %F*ü*r alle *$(i,j)\in E$*:
-         %Falls *$c_{ij}$ > k*, entferne *$(i,j)$*
-         %Sonst *$c_{ij} \leftarrow \lfloor c_{ij}(n-1) / k\epsilon\rfloor$*
-      %%
-      %Falls *$c \ge (n-1) / \epsilon$*, return true
-      %Sonst: 
-         %Wende Algorithmus B an und berechne *$g_j(c)$* f*ü*r *$j=2,\ldots,n$*
-         %Falls *$g_n(c) \le T$*, return false
-         %Sonst:
-            %Setze *$c \leftarrow c + 1$*
-            %Goto Zeile 6
-   %\end{lstlisting}
+   \begin{itemize}
+      \item Runden: in $\mathcal{O}(\log{n})$ durch binäre Suche, falls nach
+         oben beschränkt \trianglearrow $\mathcal{O}\left(|E|\log{\frac{n-1}{\epsilon}}\right)$
+      \item Exakter Algorithmus führt $\le \frac{n-1}{\epsilon}$ Iterationen
+         durch, $\mathcal{O}\left(|E|\right)$ pro Iteration
+         \begin{itemize}
+            \item Insgesamt $\mathcal{O}\left(|E|\log{\frac{n-1}{\epsilon}} + |E|\frac{n-1}{\epsilon}\right) = \mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)$
+         \end{itemize}
+   \end{itemize}
+
 \end{frame}
 
 \subsection{Upper bounds and lower}
@@ -368,23 +381,23 @@
 
 \subsection{Algorithmus}
 
-\begin{frame}
+\begin{frame}[fragile]
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
-%\begin{lstlisting}[escapeinside={*}{*}]
-%*$UB := \sum (n-1) \text{ größte Kosten}$*
-%*$LB := 1$*
-%
-%Falls *$UB \le 2LB$*, Goto Zeile 11
-%Sonst:
-   %*$k := \sqrt{UB \cdot LB}$*
-   %Falls *$TEST(k)$* == true, *$LB := k$*
-   %Sonst *$UB := k(1 + \epsilon)$*
-   %Goto Zeile 4
-%
-   %Setze *$c_{ij} \leftarrow c_{ij} (n-1)/LB\epsilon$*
-   %Berechne mit Algorithmus B die optimale L*ö*sung
-%\end{lstlisting}
+      \begin{lstlisting}[escapeinside={*}{*}]
+      *$UB := \sum (n-1) \text{ größte Kosten}$*
+      *$LB := 1$*
+
+      Falls *$UB \le 2LB$*, Goto Zeile 11
+      Sonst:
+         *$k := \sqrt{UB \cdot LB}$*
+         Falls *$TEST(k)$* == true, *$LB := k$*
+         Sonst *$UB := k(1 + \epsilon)$*
+         Goto Zeile 4
+
+         Setze *$c_{ij} \leftarrow c_{ij} (n-1)/LB\epsilon$*
+         Berechne optimale L*ö*sung
+      \end{lstlisting}
 \end{frame}
 
 
