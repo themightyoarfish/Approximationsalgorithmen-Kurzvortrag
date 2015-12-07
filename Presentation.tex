@@ -27,7 +27,7 @@
 \useoutertheme{split}
 \setbeamertemplate{itemize subitem}[triangle]
 
-\title{FPTAS für das Restricted Shortest Path-Problem}
+\title{FPTAS für das Restricted Shortest Path-Problem nach (Hassin 1992)}
 \author{Rasmus Diederichsen \and Sebastian Höffner}
 \institute{Universität Osnabrück}
 \date{\today}
@@ -384,6 +384,9 @@ g_2(1) &= 1
          \begin{itemize}
             \item Insgesamt $\mathcal{O}\left(|E|\log{\frac{n-1}{\epsilon}} + |E|\frac{n-1}{\epsilon}\right) = \mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)$
          \end{itemize}
+         \item Runden und wieder Multiplizieren verringern Kantenkosten um
+            höchstens $\frac{k\epsilon}{n-1}$, Kosten über $n-1$ Kanten also
+            max. $k\epsilon$.
    \end{itemize}
 
 \end{frame}
