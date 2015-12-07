@@ -44,33 +44,43 @@
    \frametitle{Problemstellung}
    \begin{block}{Gegeben}
       \begin{itemize}
-         \item azyklischer Graph $G = (V,E)$
+         \item azyklischer, gerichteter Graph $G = (V,E)$
          \item $(u,v) \in E$ hat Gewicht $c$ und Verzögerung $t$
       \end{itemize}
    \end{block}
-   \begin{block}{Single Source Shortest Path}
-      Berechne vom Startknoten aus alle nach Kosten kürzesten Wege zu allen
-      anderen \trianglearrow Dijkstra
-   \end{block}
-   \begin{block}{All Pairs Shortest Path}
-      Kürzeste Wege zwischen allen Knotenpaaren \trianglearrow Floyd
-   \end{block}
+   \only<1>
+   {
+      \begin{block}{Single Source Shortest Path}
+         Berechne vom Startknoten aus alle nach Kosten kürzesten Wege zu allen
+         anderen \trianglearrow Dijkstra
+      \end{block}
+      \begin{block}{All Pairs Shortest Path}
+         Kürzeste Wege zwischen allen Knotenpaaren \trianglearrow Floyd
+      \end{block}
+   }
+   \only<2>
+   {
+      \begin{alertblock}{Restricted Shortest Path}
+         Finde nach Kosten kürzesten Weg von $a$ nach $b$ mit Verzögerung $\le T$.
+         \textbf{NP}-schwer.
+      \end{alertblock}
+   }
 \end{frame}
 
-\begin{frame}
-   \frametitle{\insertsection}
-   \framesubtitle{\insertsubsection}
-   \begin{block}{Gegeben}
-      \begin{itemize}
-         \item azyklischer Graph $G = (V,E)$
-         \item $(u,v) \in E$ hat gewicht $c$ und Verzögerung $t$
-      \end{itemize}
-   \end{block}
-   \begin{alertblock}{Restricted Shortest Path}
-      Finde nach Kosten kürzesten Weg von $a$ nach $b$ mit Verzögerung $\le T$.
-      \textbf{NP}-schwer.
-   \end{alertblock}
-\end{frame}
+% \begin{frame}
+%    \frametitle{\insertsection}
+%    \framesubtitle{\insertsubsection}
+%    \begin{block}{Gegeben}
+%       \begin{itemize}
+%          \item azyklischer gerichteter Graph $G = (V,E)$
+%          \item $(u,v) \in E$ hat Gewicht $c$ und Verzögerung $t$
+%       \end{itemize}
+%    \end{block}
+%    \begin{alertblock}{Restricted Shortest Path}
+%       Finde nach Kosten kürzesten Weg von $a$ nach $b$ mit Verzögerung $\le T$.
+%       \textbf{NP}-schwer.
+%    \end{alertblock}
+% \end{frame}
 
 \section{Exakte Lösung}
 \subsection{Algorithmus}
@@ -86,7 +96,7 @@
          g_j(0) & =  \infty, ~ \text{Für} ~ j = 2,\ldots,n, \\
          g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le
    c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
-   & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
+                & \text{Für} ~ c= 1,\ldots,OPT; ~ j = 2,\ldots,n
 \end{align*}
    \end{block}
 \end{frame}
@@ -101,14 +111,14 @@
          g_1(c) & =  0, ~ \text{Für} ~ c = 0,\ldots,OPT, \\
          g_j(0) & =  \infty, ~ \text{Für} ~ j = 2,\ldots,n, \\
          g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
-                & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
+                & \text{Für} ~ c= 1,\ldots,OPT; ~ j = 2,\ldots,n
       \end{align*}
    \end{beamercolorbox}
 
    \begin{itemize}
       \item $\mathcal{O}(OPT\cdot n \cdot \text{Aufwand pro $(c,j)$})$
          \begin{itemize}
-            \item Pro $(c,j)$ evtl. alle Vorgänger betrachten
+            \item Pro $(c,j)$ alle direkten Vorgänger betrachten
             \item $\mathcal{O}\left(n^2 OPT\right) = \mathcal{O}\left(|E| OPT\right)$
          \end{itemize}
       \item Pseudopolynomiell
@@ -127,7 +137,7 @@
          g_1(c) & =  0, ~ \text{Für} ~ c = 0,\ldots,OPT, \\
          g_j(0) & =  \infty, ~ \text{Für} ~ j = 2,\ldots,n, \\
          g_j(c) & =  \min\left\{g_j(c-1), \min_{k \mid c_{kj} \le c}\left\{g_k(c-c_{kj}) + t_{kj}\right\}\right\} \\
-                & \text{Für} ~ j = 2,\ldots,n; ~ c= 1,\ldots,OPT
+                & \text{Für} ~ c= 1,\ldots,OPT; ~j = 2,\ldots,n
       \end{align*}
    \end{beamercolorbox}
 
@@ -154,7 +164,7 @@
             \node[vertex] (3) [below right of=2] {3};
             \node[vertex] (4) [above right of=2] {4};
             \node[vertex] (5) [below right of=4] {5};
-            \node[vertex] (6) [right of=5] {n=6};
+            \node[vertex] (6) [right of=5] {6};
             \draw [-to] (1) -- 
             node [above] {$t_{12}=1$} 
             node [below] {$c_{12}=1$}
@@ -433,7 +443,7 @@ g_2(1) &= 1
          als $k\epsilon$ sein, hier mit $k=LB$, die Abweichung ist also $\le
          OPT\epsilon$
       \item Rundung der Kantenkosten: Laufzeit letzte Anwendung
-         des exkaten Algorithmus' ist $\mathcal{O}\left(|E| OPT\frac{(n-1)}{LB\epsilon}\right)$
+         des exakten Algorithmus' ist $\mathcal{O}\left(|E| OPT\frac{(n-1)}{LB\epsilon}\right)$
       \item $OPT \le 2LB$: $\mathcal{O}(|E| 2LB\frac{(n-1)}{LB\epsilon})=\mathcal{O}(|E|
          2\frac{(n-1)}{\epsilon})=\mathcal{O}\left(|E|\frac{n-1}{\epsilon}\right)$
       \item Laut Hassin $\log{\log{\frac{UB}{LB}}}$ Tests, bis $\frac{UB}{LB} \le 2$
