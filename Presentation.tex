@@ -118,8 +118,10 @@
    \begin{itemize}
       \item $\mathcal{O}(OPT\cdot n \cdot \text{Aufwand pro $(c,j)$})$
          \begin{itemize}
-            \item Pro $(c,j)$ alle direkten Vorgänger betrachten
-            \item $\mathcal{O}\left(n^2 OPT\right) = \mathcal{O}\left(|E| OPT\right)$
+            \item Pro $(c,j)$ alle direkten Vorgänger betrachten, alle Kanten
+               max. $2$-mal
+            % \item $\mathcal{O}\left(n^2 OPT\right) = \mathcal{O}\left(|E| OPT\right)$
+            \item $\mathcal{O}\left(2|E| OPT\right) = \mathcal{O}\left(|E| OPT\right)$
          \end{itemize}
       \item Pseudopolynomiell
    \end{itemize}
@@ -392,7 +394,7 @@ g_2(1) &= 1
    \frametitle{\insertsection}
    \framesubtitle{\insertsubsection}
    Wir benötigen obere und untere Schranken $LB \le OPT \le UB$.
-   \only<1>{
+   \only<1->{
       \begin{block}{Lower Bound}
          \begin{itemize}
             \item $LB = 1$
